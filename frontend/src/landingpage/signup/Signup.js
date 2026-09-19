@@ -8,18 +8,32 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    console.log("SIGNUP BUTTON CLICKED");
+    console.log("Username:", username);
+    console.log("Email:", email);
+
     setError("");
 
     try {
       const response = await axios.post(
         "https://zerodha-trading-platform-tggn.onrender.com/api/auth/signup",
-        { username, email, password },
-        { withCredentials: true }
+        {
+          username,
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
       );
+
+      console.log("SIGNUP RESPONSE:", response.data);
 
       if (response.data.success) {
         navigate("/login");
@@ -27,9 +41,13 @@ function Signup() {
         setError(response.data.message || "Signup failed");
       }
     } catch (err) {
-      console.error("Signup error:", err);
+      console.error("SIGNUP ERROR:", err);
+      console.error("SERVER RESPONSE:", err.response);
+      console.error("SERVER DATA:", err.response?.data);
+
       setError(
-        err.response?.data?.message || "Something went wrong. Please try again."
+        err.response?.data?.message ||
+          "Something went wrong. Please try again."
       );
     }
   };
