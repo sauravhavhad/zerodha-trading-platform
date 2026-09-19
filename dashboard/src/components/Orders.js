@@ -7,7 +7,7 @@ const Orders = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3002/allOrders")
+      .get("https://zerodha-trading-platform-tggn.onrender.com/allOrders")
       .then((res) => {
         setAllOrders(res.data);
       })
@@ -21,6 +21,7 @@ const Orders = () => {
       {allOrders.length === 0 ? (
         <div className="no-orders">
           <p>You haven't placed any orders today</p>
+
           <Link to={"/"} className="btn">
             Get started
           </Link>
@@ -36,6 +37,7 @@ const Orders = () => {
                 <th>Mode</th>
               </tr>
             </thead>
+
             <tbody>
               {allOrders.map((order, index) => (
                 <tr key={index}>

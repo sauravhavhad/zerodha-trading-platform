@@ -11,14 +11,18 @@ const BuyActionWindow = ({ uid }) => {
 
   const handleBuyClick = async () => {
     try {
-      const response = await axios.post("http://localhost:3002/newOrder", {
-        name: uid,
-        qty: Number(stockQuantity),
-        price: Number(stockPrice),
-        mode: "BUY",
-      });
+      const response = await axios.post(
+        "https://zerodha-trading-platform-tggn.onrender.com/newOrder",
+        {
+          name: uid,
+          qty: Number(stockQuantity),
+          price: Number(stockPrice),
+          mode: "BUY",
+        }
+      );
 
       console.log("Order placed successfully:", response.data);
+
       generalContext.closeBuyWindow();
     } catch (error) {
       console.error("Order error:", error);
@@ -35,6 +39,7 @@ const BuyActionWindow = ({ uid }) => {
         <div className="inputs">
           <fieldset>
             <legend>Qty.</legend>
+
             <input
               type="number"
               name="qty"
@@ -47,6 +52,7 @@ const BuyActionWindow = ({ uid }) => {
 
           <fieldset>
             <legend>Price</legend>
+
             <input
               type="number"
               name="price"
@@ -64,11 +70,19 @@ const BuyActionWindow = ({ uid }) => {
         <span>Margin required ₹140.65</span>
 
         <div>
-          <button type="button" className="btn btn-blue" onClick={handleBuyClick}>
+          <button
+            type="button"
+            className="btn btn-blue"
+            onClick={handleBuyClick}
+          >
             Buy
           </button>
 
-          <button type="button" className="btn btn-grey" onClick={handleCancelClick}>
+          <button
+            type="button"
+            className="btn btn-grey"
+            onClick={handleCancelClick}
+          >
             Cancel
           </button>
         </div>
