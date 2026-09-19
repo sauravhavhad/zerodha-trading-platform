@@ -15,7 +15,7 @@ function Login() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3002/api/auth/login",
+        "https://zerodha-trading-platform-tggn.onrender.com/api/auth/login",
         { email, password },
         { withCredentials: true }
       );
