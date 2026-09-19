@@ -19,15 +19,33 @@ const uri = process.env.MONGO_URL;
 
 const app = express();
 
-// ==================== MIDDLEWARE ====================
+// ==================== CORS ====================
+
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://main.d2tcnnzflmyfs0.amplifyapp.com",
+];
 
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: function (origin, callback) {
+      // Allow requests without an origin
+      // such as Postman or server-to-server requests
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   })
 );
+
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(express.json());
@@ -50,10 +68,18 @@ app.post("/newOrder", async (req, res) => {
     const { name, qty, price, mode } = req.body;
 
     if (!name || !qty || !price || !mode) {
-      return res.status(400).json({ error: "Missing required order fields" });
+      return res.status(400).json({
+        error: "Missing required order fields",
+      });
     }
 
-    const newOrder = new OrdersModel({ name, qty, price, mode });
+    const newOrder = new OrdersModel({
+      name,
+      qty,
+      price,
+      mode,
+    });
+
     await newOrder.save();
 
     res.json({
@@ -62,7 +88,10 @@ app.post("/newOrder", async (req, res) => {
     });
   } catch (err) {
     console.log("Order error:", err);
-    res.status(500).json({ error: err.message });
+
+    res.status(500).json({
+      error: err.message,
+    });
   }
 });
 
@@ -70,10 +99,14 @@ app.post("/newOrder", async (req, res) => {
 app.get("/allOrders", async (req, res) => {
   try {
     const allOrders = await OrdersModel.find({});
+
     res.json(allOrders);
   } catch (err) {
     console.log("Orders fetch error:", err);
-    res.status(500).json({ error: err.message });
+
+    res.status(500).json({
+      error: err.message,
+    });
   }
 });
 
@@ -82,10 +115,14 @@ app.get("/allOrders", async (req, res) => {
 app.get("/allHoldings", async (req, res) => {
   try {
     const allHoldings = await HoldingsModel.find({});
+
     res.json(allHoldings);
   } catch (err) {
     console.log("Holdings error:", err);
-    res.status(500).json({ error: err.message });
+
+    res.status(500).json({
+      error: err.message,
+    });
   }
 });
 
@@ -94,10 +131,14 @@ app.get("/allHoldings", async (req, res) => {
 app.get("/allPositions", async (req, res) => {
   try {
     const allPositions = await PositionsModel.find({});
+
     res.json(allPositions);
   } catch (err) {
     console.log("Positions error:", err);
-    res.status(500).json({ error: err.message });
+
+    res.status(500).json({
+      error: err.message,
+    });
   }
 });
 
